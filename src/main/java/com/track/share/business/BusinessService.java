@@ -4,10 +4,14 @@ import java.util.List;
 
 public interface BusinessService {
 
-	Business addBusiness(Business business);
+	BusinessDTO addBusiness(Business business);
+
+	List<BusinessDTO> getBusinesses();
+
+	BusinessDTO updateBusiness(Integer businessId, Business business);
+
+	Boolean deleteBusiness(Integer businessId);
 	
-	List<Business> getBusinesses();
-	
-	
-	
+	Business getBusiness(Integer businessId);
+
 }
