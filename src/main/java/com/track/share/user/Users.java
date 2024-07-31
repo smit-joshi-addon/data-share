@@ -1,45 +1,38 @@
-package com.track.share.datadetail;
+package com.track.share.user;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.track.share.datamaster.DataMaster;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
-public class DataDetail {
-
+public class Users {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer detailId;
+	private Long userId;
+	
+	private String name;
 
-	@ManyToOne
-	private DataMaster master;
-	private String secret;
-	
-	private LocalDateTime validTill;
-	
+	private String email;
+
+	private String password;
+
 	@CreationTimestamp
 	private LocalDateTime createdAt;
-	
-	private String createdById;
-	private String createdByName;
-	private String createdByIp;
-	
-	private Boolean status;
 
+	@UpdateTimestamp
+	private LocalDateTime updatedAt;
 }

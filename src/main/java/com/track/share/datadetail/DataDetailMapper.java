@@ -2,6 +2,8 @@ package com.track.share.datadetail;
 
 import org.springframework.stereotype.Component;
 
+import com.track.share.datamaster.DataMaster;
+
 @Component
 public class DataDetailMapper {
 
@@ -29,12 +31,10 @@ public class DataDetailMapper {
         }
 
         DataDetail dataDetail = new DataDetail();
-        dataDetail.setDetailId(dataDetailDTO.detailId());
-        // Assuming you have a method to fetch DataMaster by its ID
-        // dataDetail.setMaster(dataMasterRepository.findById(dataDetailDTO.masterId()).orElse(null));
+        dataDetail.setMaster(DataMaster.builder().sharingId(dataDetailDTO.masterId()).build());
         dataDetail.setSecret(dataDetailDTO.secret());
         dataDetail.setValidTill(dataDetailDTO.validTill());
-        dataDetail.setCreatedAt(dataDetailDTO.createdAt());
+        
         dataDetail.setCreatedById(dataDetailDTO.createdById());
         dataDetail.setCreatedByName(dataDetailDTO.createdByName());
         dataDetail.setCreatedByIp(dataDetailDTO.createdByIp());

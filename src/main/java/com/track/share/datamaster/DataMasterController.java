@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/datamaster")
 public class DataMasterController {
@@ -27,19 +29,20 @@ public class DataMasterController {
     }
 
     @PostMapping
-    public ResponseEntity<DataMasterDTO> addMasterRecord(@RequestBody DataMasterDTO masterDTO) {
-        DataMasterDTO createdMaster = dataMasterService.addMasterRecord(masterDTO);
+    public ResponseEntity<DataMasterDTO> addMasterRecord(@RequestBody DataMasterDTO masterDTO,HttpServletRequest request) {
+        DataMasterDTO createdMaster = dataMasterService.addMasterRecord(masterDTO,request);
         return new ResponseEntity<>(createdMaster, HttpStatus.CREATED);
     }
 
     @PutMapping("/{sharingId}")
     public ResponseEntity<DataMasterDTO> updateMasterRecord(
             @PathVariable Integer sharingId,
-            @RequestBody DataMasterDTO masterDTO) {
+            @RequestBody DataMasterDTO masterDTO,HttpServletRequest request) {
         try {
-            DataMasterDTO updatedMaster = dataMasterService.updateMasterRecord(masterDTO, sharingId);
+            DataMasterDTO updatedMaster = dataMasterService.updateMasterRecord(masterDTO, sharingId,request);
             return new ResponseEntity<>(updatedMaster, HttpStatus.OK);
         } catch (RuntimeException e) {
+        	e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

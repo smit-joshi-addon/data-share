@@ -6,10 +6,11 @@ public record DataMasterDTO(
     Integer sharingId,
     Integer businessId,  // Assuming you only need the business ID, not the entire business object
     String secret,
-    String ceatedBy,
+    String ceatedById,
     String createdByIp,
     Boolean status,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt
+    LocalDateTime updatedAt,
+    RequestType type
 ) {
 }

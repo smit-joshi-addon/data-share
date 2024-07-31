@@ -11,7 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,12 +30,12 @@ public class DataMaster {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer sharingId;
 	
-	@ManyToOne
+	@OneToOne
 	private Business business;
 	
 	private String secret;
 	// Logged In User
-	private String ceatedBy;
+	private String ceatedById;
 	// Logged In User IP
 	private String createdByIp;
 	
@@ -46,6 +46,8 @@ public class DataMaster {
 	
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
+	
+	private RequestType type;
 }
 
 
