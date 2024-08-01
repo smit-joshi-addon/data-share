@@ -2,6 +2,8 @@ package com.track.share.datamaster;
 
 import java.util.List;
 
+import com.track.share.business.Business;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface DataMasterService {
@@ -13,5 +15,7 @@ public interface DataMasterService {
 	DataMasterDTO updateMasterRecord(DataMasterDTO master, Integer sharingId,HttpServletRequest request);
 
 	DataMaster getMasterRecord(Integer sharingId);
+	
+	DataMaster getMasterByBusiness(Business business);
 
 }

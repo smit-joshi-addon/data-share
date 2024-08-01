@@ -48,6 +48,12 @@ class DataDetailServiceImpl implements DataDetailService {
     	 return dataDetailRepository.updateByStatus(master, false);
     }
 
+	@Override
+	public Boolean isAnyActiveStatus(DataMaster master,Boolean status,String token) {
+		return dataDetailRepository.existsByMasterAndStatusAndSecret(master, status, token);
+	}
+    
+
 //    @Override
 //    @Transactional
 //    public DataDetailDTO updateDataDetail(Integer detailId, DataDetailDTO dataDetailDTO) {

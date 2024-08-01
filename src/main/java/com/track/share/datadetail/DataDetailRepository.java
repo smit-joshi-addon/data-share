@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.track.share.datamaster.DataMaster;
 
+
 @Repository
 interface DataDetailRepository extends JpaRepository<DataDetail, Integer> {
 
@@ -15,5 +16,7 @@ interface DataDetailRepository extends JpaRepository<DataDetail, Integer> {
 	@Transactional
 	@Query("UPDATE DataDetail d SET d.status = :status WHERE d.master = :master")
 	Integer updateByStatus(DataMaster master, Boolean status);
+	
+	Boolean existsByMasterAndStatusAndSecret(DataMaster master, Boolean status,String token);
 
 }

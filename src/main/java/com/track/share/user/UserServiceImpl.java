@@ -20,6 +20,7 @@ class UserServiceImpl implements UserService {
 		Optional<Users> u = userRepository.findByEmail(user.getEmail());
 		if(!u.isEmpty())
 			return null;
+		user.setStatus(true);
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 		return userRepository.save(user);
 	}

@@ -13,6 +13,8 @@ public interface DataDetailService {
     DataDetailDTO addDataDetail(DataDetailDTO dataDetailDTO);
     
     Integer updateDataDetailStatus(DataMaster master);
+    
+    Boolean isAnyActiveStatus(DataMaster master,Boolean status,String token);
 
 //    DataDetailDTO updateDataDetail(Integer detailId, DataDetailDTO dataDetailDTO);
 //

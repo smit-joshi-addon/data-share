@@ -20,6 +20,7 @@ import com.track.share.config.auth.dtos.SignUpRequest;
 import com.track.share.user.UserService;
 import com.track.share.user.Users;
 import com.track.share.utility.JwtHelper;
+import com.track.share.utility.Utility;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -31,13 +32,15 @@ class ApiAuthController {
 	private final UserDetailsService userDetailsService;
 	private final JwtHelper jwtHelper;
 	private final UserService userService;
+	private final Utility utility;
 
 	public ApiAuthController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService,
-			JwtHelper jwtHelper, UserService userService) {
+			JwtHelper jwtHelper, UserService userService,Utility utility) {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtHelper = jwtHelper;
 		this.userService = userService;
+		this.utility=utility;
 	}
 
 	@PostMapping("/login")
@@ -47,7 +50,7 @@ class ApiAuthController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.email());
 		String token = jwtHelper.generateToken(userDetails.getUsername());
-		return ResponseEntity.ok(new AuthResponse(token, jwtHelper.getExpirationDateFromToken(token)));
+		return ResponseEntity.ok(new AuthResponse(token, utility.convertToLocalDateTime(jwtHelper.getExpirationDateFromToken(token))));
 	}
 
 	@PostMapping("/register")
@@ -57,7 +60,7 @@ class ApiAuthController {
 			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(signUpRequest.email());
 		String token = jwtHelper.generateToken(userDetails.getUsername());
-		return ResponseEntity.ok(new AuthResponse(token, jwtHelper.getExpirationDateFromToken(token)));
+		return ResponseEntity.ok(new AuthResponse(token, utility.convertToLocalDateTime(jwtHelper.getExpirationDateFromToken(token))));
 	}
 
 	@GetMapping("/login")

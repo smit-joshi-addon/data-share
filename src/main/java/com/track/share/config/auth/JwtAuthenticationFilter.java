@@ -7,10 +7,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.track.share.business.BusinessService;
 import com.track.share.utility.JwtHelper;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,6 +27,9 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JwtHelper jwtHelper;
+
+	@Autowired
+	private BusinessService businessService;
 
 	private UserDetailsService userDetailsService;
 
@@ -62,10 +67,20 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 				if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 					// Fetch user details from username
-					UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+					UserDetails userDetails;
+
+					try {
+						userDetails = this.userDetailsService.loadUserByUsername(username);
+					} catch (UsernameNotFoundException e) {
+						userDetails = this.businessService.loadUserByUsername(username, token);
+					}
 
 					// Validate the token
-					Boolean validateToken = this.jwtHelper.validateToken(token, userDetails.getUsername());
+					Boolean validateToken = userDetails.isEnabled()
+							? this.jwtHelper.validateToken(token, userDetails.getUsername())
+							: false;
+
+//					logger.info("Validation Result: " + validateToken);
 
 					if (validateToken) {
 						// Set up authentication

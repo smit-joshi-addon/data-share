@@ -1,5 +1,5 @@
 package com.track.share.config.auth.dtos;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-public record AuthResponse (String token,Date expiry) {}
+public record AuthResponse (String token,LocalDateTime expiry) {}
