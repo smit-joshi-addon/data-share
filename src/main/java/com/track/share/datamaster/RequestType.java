@@ -1,5 +1,5 @@
 package com.track.share.datamaster;
 
-public enum RequestType {
+enum RequestType {
 	PULL, PUSH, BOTH
 }

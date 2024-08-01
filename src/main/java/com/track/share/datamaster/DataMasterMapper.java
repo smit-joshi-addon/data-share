@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.track.share.business.Business;
 
 @Component
-public class DataMasterMapper {
+class DataMasterMapper {
 
     // Convert DataMaster entity to DataMasterDTO
     public DataMasterDTO toDTO(DataMaster dataMaster) {

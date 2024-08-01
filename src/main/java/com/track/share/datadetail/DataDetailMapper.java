@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.track.share.datamaster.DataMaster;
 
 @Component
-public class DataDetailMapper {
+class DataDetailMapper {
 
     public DataDetailDTO toDTO(DataDetail dataDetail) {
         if (dataDetail == null) {

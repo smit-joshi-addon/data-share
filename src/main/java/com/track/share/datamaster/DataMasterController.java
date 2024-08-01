@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/datamaster")
-public class DataMasterController {
+class DataMasterController {
 
     @Autowired
     private DataMasterService dataMasterService;
