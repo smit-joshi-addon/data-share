@@ -8,4 +8,4 @@ public record AnalyticsDTO(
 		 String methodName,
 		 LocalDateTime calledAt,
 		 String calledByIp
-		) {}
+) {}

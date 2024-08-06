@@ -13,6 +13,8 @@ import com.track.share.config.auth.AuthUserDetails;
 import com.track.share.datadetail.DataDetailService;
 import com.track.share.datamaster.DataMaster;
 import com.track.share.datamaster.DataMasterService;
+import com.track.share.exceptions.NotFoundException;
+import com.track.share.exceptions.UsernameUnavailableException;
 import com.track.share.user.Users;
 
 @Service
@@ -32,6 +34,9 @@ class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	public BusinessDTO addBusiness(Business business) {
+		if(businessRepository.existsByUsername(business.getUsername())) {
+			throw new UsernameUnavailableException("Username unavailable, please try with a new username");
+		}
 		business.setPassword(new BCryptPasswordEncoder().encode(business.getPassword()));
 		Business savedBusiness = businessRepository.save(business);
 		return businessMapper.toDTO(savedBusiness);
@@ -53,42 +58,44 @@ class BusinessServiceImpl implements BusinessService {
 			Business savedBusiness = businessRepository.save(updatedBusiness);
 			return businessMapper.toDTO(savedBusiness);
 		} else {
-			throw new RuntimeException("Business not found with id " + businessId);
+			throw new NotFoundException("Business not found with id " + businessId);
 		}
 	}
 
 	@Override
 	public Boolean deleteBusiness(Integer businessId) {
-		if (businessRepository.existsById(businessId)) {
-			businessRepository.deleteById(businessId);
-			return true;
-		} else {
-			return false;
-		}
+		if (!businessRepository.existsById(businessId)) {
+			throw new NotFoundException("Business not found with id " + businessId);
+		} 
+		businessRepository.deleteById(businessId);
+		return true;
 	}
 
 	@Override
 	public Business getBusiness(Integer businessId) {
 		return businessRepository.findById(businessId)
-				.orElseThrow(() -> new RuntimeException("Business not found with id " + businessId));
+				.orElseThrow(() -> new NotFoundException("Business not found with id " + businessId));
 	}
 
 	@Override
 	public AuthUserDetails loadUserByUsername(String username, String token) throws UsernameNotFoundException {
-		Business business = businessRepository.findByUsername(username);
-		DataMaster master = masterService.getMasterByBusiness(business);
-		Boolean status = detailService.isAnyActiveStatus(master, Boolean.TRUE,token);
-		if (business == null) {
-			throw new UsernameNotFoundException("Invalid Username Or Password");
+		Optional<Business> business = businessRepository.findByUsername(username);
+		if (business.isEmpty()) {
+			throw new NotFoundException("Invalid Username Or Password");
 		}
-		
-		return new AuthUserDetails(
-				Users.builder().email(business.getUsername()).status(status).password(business.getPassword()).build());
+		DataMaster master = masterService.getMasterByBusiness(business.get());
+		Boolean status = detailService.isAnyActiveStatus(master, Boolean.TRUE, token);
+		return new AuthUserDetails(Users.builder().email(business.get().getUsername()).status(status)
+				.password(business.get().getPassword()).build());
 
 	}
 
 	@Override
 	public Business getBusinessByUsername(String username) {
-		return businessRepository.findByUsername(username);
+		Optional<Business> business = businessRepository.findByUsername(username);
+		if (business.isEmpty()) {
+			throw new NotFoundException("Invalid Username Or Password");
+		}
+		return business.get();
 	}
 }

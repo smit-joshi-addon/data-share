@@ -13,40 +13,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/datamaster")
 class DataMasterController {
 
-    @Autowired
-    private DataMasterService dataMasterService;
+	@Autowired
+	private DataMasterService dataMasterService;
 
-    @GetMapping
-    public ResponseEntity<List<DataMasterDTO>> getMasterRecords() {
-        List<DataMasterDTO> masterRecords = dataMasterService.getMasterRecords();
-        return new ResponseEntity<>(masterRecords, HttpStatus.OK);
-    }
+	@GetMapping
+	@Operation(summary = "get all the master records")
+	public ResponseEntity<List<DataMasterDTO>> getMasterRecords() {
+		List<DataMasterDTO> masterRecords = dataMasterService.getMasterRecords();
+		return new ResponseEntity<>(masterRecords, HttpStatus.OK);
+	}
 
-    @PostMapping
-    public ResponseEntity<DataMasterDTO> addMasterRecord(@RequestBody DataMasterDTO masterDTO,HttpServletRequest request) {
-        DataMasterDTO createdMaster = dataMasterService.addMasterRecord(masterDTO,request);
-        return new ResponseEntity<>(createdMaster, HttpStatus.CREATED);
-    }
+	@PostMapping
+	@Operation(summary = "adds the Master Entry")
+	@ApiResponse(responseCode = "201", description = "Master Entry Created successfully")
+	public ResponseEntity<DataMasterDTO> addMasterRecord(@RequestBody DataMasterDTO masterDTO,
+			HttpServletRequest request) {
+		DataMasterDTO createdMaster = dataMasterService.addMasterRecord(masterDTO, request);
+		return new ResponseEntity<>(createdMaster, HttpStatus.CREATED);
+	}
 
-    @PutMapping("/{sharingId}")
-    public ResponseEntity<DataMasterDTO> updateMasterRecord(
-            @PathVariable Integer sharingId,
-            @RequestBody DataMasterDTO masterDTO,HttpServletRequest request) {
-        try {
-            DataMasterDTO updatedMaster = dataMasterService.updateMasterRecord(masterDTO, sharingId,request);
-            return new ResponseEntity<>(updatedMaster, HttpStatus.OK);
-        } catch (RuntimeException e) {
-        	e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    
+	@PutMapping("/{sharingId}")
+	@Operation(summary = "updates the master entry")
+	@ApiResponse(responseCode = "200", description = "updated master entry")
+	public ResponseEntity<DataMasterDTO> updateMasterRecord(@PathVariable Integer sharingId,
+			@RequestBody DataMasterDTO masterDTO, HttpServletRequest request) {
+		try {
+			DataMasterDTO updatedMaster = dataMasterService.updateMasterRecord(masterDTO, sharingId, request);
+			return new ResponseEntity<>(updatedMaster, HttpStatus.OK);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 //     Not Exposing the End-point
 
 //    @GetMapping("/{sharingId}")

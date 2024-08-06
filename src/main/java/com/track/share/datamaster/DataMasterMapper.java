@@ -34,7 +34,7 @@ class DataMasterMapper {
             .sharingId(dataMasterDTO.sharingId()!=null?dataMasterDTO.sharingId():null)
             .business(Business.builder().businessId(dataMasterDTO.businessId()).build())
             .secret(dataMasterDTO.secret()!=null?dataMasterDTO.secret():null)
-            .ceatedById(dataMasterDTO.ceatedById()!=null?dataMasterDTO.ceatedById():null)
+            .ceatedById(dataMasterDTO.createdById()!=null?dataMasterDTO.createdById():null)
             .createdByIp(dataMasterDTO.createdByIp()!=null?dataMasterDTO.createdByIp():null)
             .status(dataMasterDTO.status()!=null?dataMasterDTO.status():null)
             .type(dataMasterDTO.type())

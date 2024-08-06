@@ -3,19 +3,20 @@ package com.track.share.datadetail;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.track.share.datamaster.DataMaster;
+import com.track.share.exceptions.NotFoundException;
+
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 class DataDetailServiceImpl implements DataDetailService {
 
-    @Autowired
     private DataDetailRepository dataDetailRepository;
 
-    @Autowired
     private DataDetailMapper dataDetailMapper;
 
     @Override
@@ -31,7 +32,7 @@ class DataDetailServiceImpl implements DataDetailService {
     public DataDetailDTO getDataDetailById(Integer detailId) {
         return dataDetailRepository.findById(detailId)
                 .map(dataDetailMapper::toDTO)
-                .orElse(null); // Or throw an exception if not found
+                .orElseThrow(() -> new NotFoundException("NO Data Exists for given id "+detailId)); // Or throw an exception if not found
     }
 
     @Override

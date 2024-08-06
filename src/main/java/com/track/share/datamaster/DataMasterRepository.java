@@ -1,11 +1,13 @@
 package com.track.share.datamaster;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.track.share.business.Business;
 
 
-interface DataMasterRepository extends JpaRepository<DataMaster, Integer>{
+public interface DataMasterRepository extends JpaRepository<DataMaster, Integer>{
 
-	DataMaster findByBusiness(Business business);
+	Optional<DataMaster> findByBusiness(Business business);
 }

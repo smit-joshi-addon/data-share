@@ -13,6 +13,7 @@ import com.track.share.business.Business;
 import com.track.share.business.BusinessService;
 import com.track.share.datadetail.DataDetailDTO;
 import com.track.share.datadetail.DataDetailService;
+import com.track.share.exceptions.NotFoundException;
 import com.track.share.user.UserService;
 import com.track.share.user.Users;
 import com.track.share.utility.JwtHelper;
@@ -58,7 +59,7 @@ class DataMasterServiceImpl implements DataMasterService {
 		DataMaster dataMaster = dataMasterMapper.toEntity(masterDTO);
 		dataMaster.setSecret(jwtHelper.generateToken(business.getUsername()));
 
-		dataMaster.setCeatedById(user.getUserId().toString());
+		dataMaster.setCeatedById(user!=null?user.getUserId().toString():"");
 		dataMaster.setCreatedByIp(request.getRemoteAddr());
 		DataMaster savedDataMaster = dataMasterRepository.save(dataMaster);
 		addDetails(savedDataMaster);
@@ -69,7 +70,7 @@ class DataMasterServiceImpl implements DataMasterService {
 		Users user = userService.getUser(utility.getCurrentUsername());
 		Date dateTieme = jwtHelper.getExpirationDateFromToken(master.getSecret());
 		DataDetailDTO detailDTO = new DataDetailDTO(null, master.getSharingId(), master.getSecret(),
-				utility.convertToLocalDateTime(dateTieme), null, master.getCeatedById(), user.getName(),
+				utility.convertToLocalDateTime(dateTieme), null, master.getCeatedById(), user!=null?user.getName():"",
 				master.getCreatedByIp(), master.getStatus());
 		detailService.addDataDetail(detailDTO);
 	}
@@ -84,7 +85,7 @@ class DataMasterServiceImpl implements DataMasterService {
 			Business business = businessService.getBusiness(masterDTO.businessId());
 			dataMaster.setBusiness(Business.builder().businessId(masterDTO.businessId()).build());
 			dataMaster.setSecret(jwtHelper.generateToken(business.getUsername()));
-			dataMaster.setCeatedById(user.getUserId().toString());
+			dataMaster.setCeatedById(user!=null?user.getUserId().toString():"");
 			dataMaster.setCreatedByIp(request.getRemoteAddr());
 			dataMaster.setStatus(masterDTO.status());
 			// Update other fields if needed
@@ -107,6 +108,6 @@ class DataMasterServiceImpl implements DataMasterService {
 
 	@Override
 	public DataMaster getMasterByBusiness(Business business) {
-		return dataMasterRepository.findByBusiness(business);
+		return dataMasterRepository.findByBusiness(business).orElseThrow(() -> new NotFoundException("No Master found associated with "+business.getName()));
 	}
 }
