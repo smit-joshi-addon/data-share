@@ -2,6 +2,7 @@ package com.track.share.user;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ class UserServiceImpl implements UserService {
 	@Override
 	public Users getUser(String username) {
 		return userRepository.findByEmail(username)
-				.orElseThrow(() -> new NotFoundException("user not found with username " + username));
+				.orElseThrow(() -> new UsernameNotFoundException("user not found with username " + username));
 	}
 
 	@Override

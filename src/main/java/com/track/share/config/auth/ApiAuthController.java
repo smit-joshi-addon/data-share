@@ -56,8 +56,10 @@ class ApiAuthController {
 	@PostMapping("/register")
 	public ResponseEntity<AuthResponse> registerUser(@RequestBody SignUpRequest signUpRequest) {
 		if (userService.createUser(Users.builder().email(signUpRequest.email()).password(signUpRequest.password())
-				.name(signUpRequest.name()).build()) == null)
-			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+				.name(signUpRequest.name()).build()) == null) {
+//			this can be returned but the exception is handled already & response is returned by GlobalExceptionHandler
+//			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}
 		UserDetails userDetails = userDetailsService.loadUserByUsername(signUpRequest.email());
 		String token = jwtHelper.generateToken(userDetails.getUsername());
 		return ResponseEntity.ok(new AuthResponse(token, utility.convertToLocalDateTime(jwtHelper.getExpirationDateFromToken(token))));

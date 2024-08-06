@@ -15,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.track.share.exceptions.NotFoundException;
@@ -90,7 +91,7 @@ class UserServiceTest {
 		String providedEmail = "unknown@gmail.com";
 		// when
 		// then
-		assertThatThrownBy(() -> underTest.getUser(providedEmail)).isInstanceOf(NotFoundException.class)
+		assertThatThrownBy(() -> underTest.getUser(providedEmail)).isInstanceOf(UsernameNotFoundException.class)
 				.hasMessage("user not found with username " + providedEmail);
 	}
 
