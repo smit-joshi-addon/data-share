@@ -23,4 +23,5 @@ public class Business {
 	@Column(unique = true)
 	private String username;
 	private String password;
+
 }

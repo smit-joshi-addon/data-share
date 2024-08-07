@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.track.share.business.Business;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,7 +31,7 @@ public class DataMaster {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer sharingId;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.DETACH)
 	private Business business;
 	
 	private String secret;

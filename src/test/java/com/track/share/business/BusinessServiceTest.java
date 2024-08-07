@@ -71,7 +71,7 @@ public class BusinessServiceTest {
     	String businessName="testBusiness";
     	String businessUsername="testusername";
     	String businessPassword="testpassword";
-        Business business = new Business(businessId,businessName,businessUsername,businessPassword);
+    	Business business = Business.builder().businessId(businessId).name(businessName).username(businessUsername).password(businessPassword).build();
         BusinessDTO businessDTO = new BusinessDTO(businessId,businessName,businessUsername);
         when(businessRepository.existsByUsername(business.getUsername())).thenReturn(false);
         when(businessMapper.toDTO(any(Business.class))).thenReturn(businessDTO);

@@ -34,7 +34,7 @@ class ApiAuthIntegrationTest {
 	private TestRestTemplate restTemplate;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository underTest;
 	
 
 	@Container
@@ -50,7 +50,7 @@ class ApiAuthIntegrationTest {
 	
 	@AfterEach
 	void cleanUp() {
-		userRepository.deleteAll();
+		underTest.deleteAll();
 	}
 
 	@Test

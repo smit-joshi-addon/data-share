@@ -20,6 +20,9 @@ class BusinessController {
 
     @Autowired
     private BusinessService businessService;
+    
+    @Autowired
+    private BusinessMapper mapper;
 
     @PostMapping
     public ResponseEntity<BusinessDTO> addBusiness(@RequestBody Business business) {
@@ -56,7 +59,7 @@ class BusinessController {
     @GetMapping("/{businessId}")
     public ResponseEntity<BusinessDTO> getBusiness(@PathVariable Integer businessId) {
         try {
-            BusinessDTO business = businessService.addBusiness(businessService.getBusiness(businessId));
+            BusinessDTO business = mapper.toDTO(businessService.getBusiness(businessId));
             return new ResponseEntity<>(business, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

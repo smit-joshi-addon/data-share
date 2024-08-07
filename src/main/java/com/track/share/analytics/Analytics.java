@@ -20,11 +20,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Builder
-class Analytics {
+public class Analytics {
 	
 	@Id
 	@UuidGenerator
 	private String uuid;
+	
 	@ManyToOne
 	private Business business;
 
@@ -34,4 +35,6 @@ class Analytics {
 	private LocalDateTime calledAt;
 
 	private String calledByIp;
+	
+	
 }
