@@ -34,7 +34,7 @@ class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	public BusinessDTO addBusiness(Business business) {
-		if(businessRepository.existsByUsername(business.getUsername())) {
+		if (businessRepository.existsByUsername(business.getUsername())) {
 			throw new UsernameUnavailableException("Username unavailable, please try with a new username");
 		}
 		business.setPassword(new BCryptPasswordEncoder().encode(business.getPassword()));
@@ -66,7 +66,7 @@ class BusinessServiceImpl implements BusinessService {
 	public Boolean deleteBusiness(Integer businessId) {
 		if (!businessRepository.existsById(businessId)) {
 			throw new NotFoundException("Business not found with id " + businessId);
-		} 
+		}
 		businessRepository.deleteById(businessId);
 		return true;
 	}

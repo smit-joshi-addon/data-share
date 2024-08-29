@@ -13,27 +13,27 @@ import com.track.share.analytics.AnalyticsService;
 
 public class DataPullServiceTest {
 
-    @Mock
-    private AnalyticsService analyticsService;
+	@Mock
+	private AnalyticsService analyticsService;
 
-    @InjectMocks
-    private DefaultDataPullService dataPullService;
+	@InjectMocks
+	private DefaultDataPullService dataPullService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    void shouldLogAndCallCreateAnalytics_whenGetDataIsCalled() {
-        // Given
-        String calledByIp = "127.0.0.1";
+	@Test
+	void shouldLogAndCallCreateAnalytics_whenGetDataIsCalled() {
+		// Given
+		String calledByIp = "127.0.0.1";
 
-        // When
-        String result = dataPullService.getData(calledByIp);
+		// When
+		String result = dataPullService.getData(calledByIp);
 
-        // Then
-        assertEquals("Pulling Data", result);
-        verify(analyticsService).createAnalytics("getData", calledByIp);
-    }
+		// Then
+		assertEquals("Pulling Data", result);
+		verify(analyticsService).createAnalytics("getData", calledByIp);
+	}
 }

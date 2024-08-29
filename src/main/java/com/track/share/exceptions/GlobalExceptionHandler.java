@@ -13,28 +13,20 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(value = UsernameUnavailableException.class)
-    public ApiErrorResponse handleUsernameUnavailableException(UsernameUnavailableException ex,
-                                                                    HttpServletRequest request,
-                                                                    HandlerMethod method) {
-        return new ApiErrorResponse(
-                HttpStatus.CONFLICT, ex.getMessage(),
-                request.getRequestURI(),
-                method.getMethod().getName(),
-                ZonedDateTime.now());
-    }
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ExceptionHandler(value = UsernameUnavailableException.class)
+	public ApiErrorResponse handleUsernameUnavailableException(UsernameUnavailableException ex,
+			HttpServletRequest request, HandlerMethod method) {
+		return new ApiErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI(),
+				method.getMethod().getName(), ZonedDateTime.now());
+	}
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = NotFoundException.class)
-    public ApiErrorResponse handleNotFoundException(NotFoundException ex,
-                                                            HttpServletRequest request,
-                                                            HandlerMethod method) {
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(value = NotFoundException.class)
+	public ApiErrorResponse handleNotFoundException(NotFoundException ex, HttpServletRequest request,
+			HandlerMethod method) {
 
-        return new ApiErrorResponse(
-                HttpStatus.NOT_FOUND, ex.getMessage(),
-                request.getRequestURI(),
-                method.getMethod().getName(),
-                ZonedDateTime.now());
-    }
+		return new ApiErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI(),
+				method.getMethod().getName(), ZonedDateTime.now());
+	}
 }

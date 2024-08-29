@@ -20,7 +20,7 @@ public class Utility {
 
 	@Autowired
 	private SessionRegistry sessionRegistry;
-	
+
 	public LocalDateTime convertToLocalDateTime(Date date) {
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
@@ -39,7 +39,7 @@ public class Utility {
 		// Return a default or handle the case where the username is not available
 		return "unknownUser";
 	}
-	
+
 	public void invalidateUserSession(String username) {
 		List<Object> principals = sessionRegistry.getAllPrincipals();
 

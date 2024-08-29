@@ -10,23 +10,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.track.share.user.Users;
 
-public class AuthUserDetails implements  UserDetails {
+public class AuthUserDetails implements UserDetails {
 
-	private final String  ROLE_PREFIX="ROLE_";
+	private final String ROLE_PREFIX = "ROLE_";
 
 	private static final long serialVersionUID = 1L;
 
 	private Users user;
 
 	public AuthUserDetails(Users user) {
-		this.user=user;
+		this.user = user;
 	}
-
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		 SimpleGrantedAuthority authority = new SimpleGrantedAuthority(ROLE_PREFIX);
-	        return Arrays.asList(authority);
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(ROLE_PREFIX);
+		return Arrays.asList(authority);
 	}
 
 	@Override
@@ -59,12 +58,10 @@ public class AuthUserDetails implements  UserDetails {
 		return user.getStatus();
 	}
 
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(ROLE_PREFIX, user);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {

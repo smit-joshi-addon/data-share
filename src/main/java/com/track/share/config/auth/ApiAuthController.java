@@ -35,22 +35,24 @@ class ApiAuthController {
 	private final Utility utility;
 
 	public ApiAuthController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService,
-			JwtHelper jwtHelper, UserService userService,Utility utility) {
+			JwtHelper jwtHelper, UserService userService, Utility utility) {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtHelper = jwtHelper;
 		this.userService = userService;
-		this.utility=utility;
+		this.utility = utility;
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponse> authenticateUser(@RequestBody AuthRequest authRequest,HttpServletRequest request) {
+	public ResponseEntity<AuthResponse> authenticateUser(@RequestBody AuthRequest authRequest,
+			HttpServletRequest request) {
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(authRequest.email(), authRequest.password()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.email());
 		String token = jwtHelper.generateToken(userDetails.getUsername());
-		return ResponseEntity.ok(new AuthResponse(token, utility.convertToLocalDateTime(jwtHelper.getExpirationDateFromToken(token))));
+		return ResponseEntity.ok(
+				new AuthResponse(token, utility.convertToLocalDateTime(jwtHelper.getExpirationDateFromToken(token))));
 	}
 
 	@PostMapping("/register")
@@ -62,7 +64,8 @@ class ApiAuthController {
 		}
 		UserDetails userDetails = userDetailsService.loadUserByUsername(signUpRequest.email());
 		String token = jwtHelper.generateToken(userDetails.getUsername());
-		return ResponseEntity.ok(new AuthResponse(token, utility.convertToLocalDateTime(jwtHelper.getExpirationDateFromToken(token))));
+		return ResponseEntity.ok(
+				new AuthResponse(token, utility.convertToLocalDateTime(jwtHelper.getExpirationDateFromToken(token))));
 	}
 
 	@GetMapping("/login")

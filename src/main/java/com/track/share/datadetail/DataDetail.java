@@ -30,16 +30,16 @@ public class DataDetail {
 	@ManyToOne
 	private DataMaster master;
 	private String secret;
-	
+
 	private LocalDateTime validTill;
-	
+
 	@CreationTimestamp
 	private LocalDateTime createdAt;
-	
+
 	private String createdById;
 	private String createdByName;
 	private String createdByIp;
-	
+
 	private Boolean status;
 
 }

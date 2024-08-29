@@ -29,7 +29,7 @@ class WebSecurityConfig {
 
 	@Autowired
 	private JwtAuthenticationEntryPoint point;
-	
+
 	@Autowired
 	private JwtAuthenticationFilter filter;
 
@@ -56,9 +56,9 @@ class WebSecurityConfig {
 		return http.getSharedObject(AuthenticationManagerBuilder.class).build();
 	}
 
-	 @Bean
+	@Bean
 	SessionRegistry sessionRegistry() {
-		 return new SessionRegistryImpl();
+		return new SessionRegistryImpl();
 	}
 
 	@Bean
@@ -74,24 +74,16 @@ class WebSecurityConfig {
 	@Bean
 //	@Order(1)
 	SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.securityMatcher("/api/**")
-			.csrf(csrf -> csrf.disable())
-			.cors(cors -> cors
-				    .configurationSource(request -> {
-				        CorsConfiguration config = new CorsConfiguration();
-				        config.setAllowedOrigins(Arrays.asList("*"));
-				        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-				        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-				        return config;
-			}))
-			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/auth/**").permitAll()
-				.requestMatchers("/api/v1/manage").hasAnyRole("ADMIN")
-				.anyRequest().authenticated())
-			.exceptionHandling(ex -> ex
-				.authenticationEntryPoint(point))
-			.sessionManagement(session -> session
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		http.securityMatcher("/api/**").csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(request -> {
+			CorsConfiguration config = new CorsConfiguration();
+			config.setAllowedOrigins(Arrays.asList("*"));
+			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+			config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+			return config;
+		})).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll()
+				.requestMatchers("/api/v1/manage").hasAnyRole("ADMIN").anyRequest().authenticated())
+				.exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

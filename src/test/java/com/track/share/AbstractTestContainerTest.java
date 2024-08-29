@@ -16,7 +16,7 @@ public abstract class AbstractTestContainerTest {
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
 			DockerImageName.parse("postgres:16.2"));
-	
+
 	@Test
 	void canEstalishedConnection() {
 		assertThat(postgreSQLContainer.isCreated()).isTrue();

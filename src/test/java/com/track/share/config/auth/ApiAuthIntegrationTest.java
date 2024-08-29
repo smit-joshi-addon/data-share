@@ -28,26 +28,24 @@ import com.track.share.user.UserRepository;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Testcontainers
 class ApiAuthIntegrationTest {
-	
-	
+
 	@Autowired
 	private TestRestTemplate restTemplate;
-	
+
 	@Autowired
 	private UserRepository underTest;
-	
 
 	@Container
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
 			DockerImageName.parse("postgres:16.2"));
-	
+
 	@BeforeAll
 	static void canEstalishedConnection() {
 		assertThat(postgreSQLContainer.isCreated()).isTrue();
 		assertThat(postgreSQLContainer.isRunning()).isTrue();
 	}
-	
+
 	@AfterEach
 	void cleanUp() {
 		underTest.deleteAll();
@@ -58,32 +56,32 @@ class ApiAuthIntegrationTest {
 		// given
 		String API_AUTH_PATH = "/api/auth";
 		SignUpRequest registerUser1 = new SignUpRequest("admin", "admin@gmail.com", "admin");
-		restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST,
-				new HttpEntity<>(registerUser1), new ParameterizedTypeReference<>() {
-		});	
+		restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST, new HttpEntity<>(registerUser1),
+				new ParameterizedTypeReference<>() {
+				});
 		// when
 		AuthRequest request = new AuthRequest("admin@gmail.com", "admin");
-		ResponseEntity<AuthResponse> authResponce =  restTemplate.exchange(API_AUTH_PATH + "/login", HttpMethod.POST,
-				new HttpEntity<>(request), AuthResponse.class);	
+		ResponseEntity<AuthResponse> authResponce = restTemplate.exchange(API_AUTH_PATH + "/login", HttpMethod.POST,
+				new HttpEntity<>(request), AuthResponse.class);
 		// then
 		assertThat(authResponce.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
-	
+
 	@Test
 	void shouldNotAuthenticateUserIfCredentialsAreIncorrect() {
 		// given
 		String API_AUTH_PATH = "/api/auth";
 		SignUpRequest registerUser1 = new SignUpRequest("admin", "admin@gmail.com", "admin");
-		restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST,
-				new HttpEntity<>(registerUser1), Void.class);
-		
+		restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST, new HttpEntity<>(registerUser1),
+				Void.class);
+
 		// when
 		AuthRequest request = new AuthRequest("admin2@gmail.com", "incorrectpassword");
-		ResponseEntity<String> authResponce =  restTemplate.exchange(API_AUTH_PATH + "/login", HttpMethod.POST,
+		ResponseEntity<String> authResponce = restTemplate.exchange(API_AUTH_PATH + "/login", HttpMethod.POST,
 				new HttpEntity<>(request), String.class);
 		// then
 		assertThat(authResponce.getStatusCode().is4xxClientError()).isTrue();
-		
+
 	}
 
 	@Test
@@ -93,7 +91,7 @@ class ApiAuthIntegrationTest {
 		SignUpRequest request = new SignUpRequest("admin", "admin@gmail.com", "admin");
 		// when
 		ResponseEntity<AuthResponse> authResponse = restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST,
-				new HttpEntity<>(request), AuthResponse.class);		
+				new HttpEntity<>(request), AuthResponse.class);
 		// then
 		assertThat(authResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
@@ -103,12 +101,12 @@ class ApiAuthIntegrationTest {
 		// given
 		String API_AUTH_PATH = "/api/auth";
 		SignUpRequest registerUser1 = new SignUpRequest("admin", "admin@gmail.com", "admin");
-		restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST,
-				new HttpEntity<>(registerUser1), Void.class);	
+		restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST, new HttpEntity<>(registerUser1),
+				Void.class);
 		// when
 		SignUpRequest registerUser2 = new SignUpRequest("user2", "admin@gmail.com", "user2password");
 		ResponseEntity<AuthResponse> authResponse = restTemplate.exchange(API_AUTH_PATH + "/register", HttpMethod.POST,
-				new HttpEntity<>(registerUser2), AuthResponse.class);	
+				new HttpEntity<>(registerUser2), AuthResponse.class);
 		// then
 		assertThat(authResponse.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 	}

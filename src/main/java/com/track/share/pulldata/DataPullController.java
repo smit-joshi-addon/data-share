@@ -18,7 +18,6 @@ class DataPullController {
 
 	@GetMapping
 	@Operation(security = { @SecurityRequirement(name = "bearer-key") })
-	
 	public String getData(HttpServletRequest request) {
 		return pullService.getData(request.getRemoteAddr());
 	}

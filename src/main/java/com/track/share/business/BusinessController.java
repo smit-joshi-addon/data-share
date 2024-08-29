@@ -18,51 +18,49 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/businesses")
 class BusinessController {
 
-    @Autowired
-    private BusinessService businessService;
-    
-    @Autowired
-    private BusinessMapper mapper;
+	@Autowired
+	private BusinessService businessService;
 
-    @PostMapping
-    public ResponseEntity<BusinessDTO> addBusiness(@RequestBody Business business) {
-        BusinessDTO createdBusiness = businessService.addBusiness(business);
-        return new ResponseEntity<>(createdBusiness, HttpStatus.CREATED);
-    }
+	@Autowired
+	private BusinessMapper mapper;
 
-    @GetMapping
-    public ResponseEntity<List<BusinessDTO>> getBusinesses() {
-        List<BusinessDTO> businesses = businessService.getBusinesses();
-        return new ResponseEntity<>(businesses, HttpStatus.OK);
-    }
+	@PostMapping
+	public ResponseEntity<BusinessDTO> addBusiness(@RequestBody Business business) {
+		BusinessDTO createdBusiness = businessService.addBusiness(business);
+		return new ResponseEntity<>(createdBusiness, HttpStatus.CREATED);
+	}
 
-    @PutMapping("/{businessId}")
-    public ResponseEntity<BusinessDTO> updateBusiness(@PathVariable Integer businessId, @RequestBody Business business) {
-        try {
-            BusinessDTO updatedBusiness = businessService.updateBusiness(businessId, business);
-            return new ResponseEntity<>(updatedBusiness, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+	@GetMapping
+	public ResponseEntity<List<BusinessDTO>> getBusinesses() {
+		List<BusinessDTO> businesses = businessService.getBusinesses();
+		return new ResponseEntity<>(businesses, HttpStatus.OK);
+	}
 
-    @DeleteMapping("/{businessId}")
-    public ResponseEntity<Void> deleteBusiness(@PathVariable Integer businessId) {
-        boolean isDeleted = businessService.deleteBusiness(businessId);
-        if (isDeleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+	@PutMapping("/{businessId}")
+	public ResponseEntity<BusinessDTO> updateBusiness(@PathVariable Integer businessId,
+			@RequestBody Business business) {
+		try {
+			BusinessDTO updatedBusiness = businessService.updateBusiness(businessId, business);
+			return new ResponseEntity<>(updatedBusiness, HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 
-    @GetMapping("/{businessId}")
-    public ResponseEntity<BusinessDTO> getBusiness(@PathVariable Integer businessId) {
-        try {
-            BusinessDTO business = mapper.toDTO(businessService.getBusiness(businessId));
-            return new ResponseEntity<>(business, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+	@DeleteMapping("/{businessId}")
+	public ResponseEntity<Void> deleteBusiness(@PathVariable Integer businessId) {
+		businessService.deleteBusiness(businessId);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+	}
+
+	@GetMapping("/{businessId}")
+	public ResponseEntity<BusinessDTO> getBusiness(@PathVariable Integer businessId) {
+		try {
+			BusinessDTO business = mapper.toDTO(businessService.getBusiness(businessId));
+			return new ResponseEntity<>(business, HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 }

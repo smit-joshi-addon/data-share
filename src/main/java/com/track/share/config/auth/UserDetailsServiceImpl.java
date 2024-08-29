@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.track.share.user.UserService;
 import com.track.share.user.Users;
 
-
 class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired

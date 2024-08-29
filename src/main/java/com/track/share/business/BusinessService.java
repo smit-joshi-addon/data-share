@@ -15,11 +15,11 @@ public interface BusinessService {
 	BusinessDTO updateBusiness(Integer businessId, Business business);
 
 	Boolean deleteBusiness(Integer businessId);
-	
+
 	Business getBusiness(Integer businessId);
-	
+
 	Business getBusinessByUsername(String username);
-	
-	AuthUserDetails loadUserByUsername(String username,String token) throws UsernameNotFoundException;
+
+	AuthUserDetails loadUserByUsername(String username, String token) throws UsernameNotFoundException;
 
 }

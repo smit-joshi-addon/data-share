@@ -31,7 +31,7 @@ public class Users {
 	private String email;
 
 	private String password;
-	
+
 	@Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean status;
 

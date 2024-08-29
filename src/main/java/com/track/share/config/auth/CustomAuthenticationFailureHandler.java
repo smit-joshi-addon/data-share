@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-
-
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			org.springframework.security.core.AuthenticationException exception) throws IOException, ServletException {
@@ -23,13 +21,15 @@ class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler
 		Map<String, Object> data = new HashMap<>();
 		data.put("timestamp", Calendar.getInstance().getTime());
 		data.put("exception", exception.getMessage());
-		if(exception.getMessage().equalsIgnoreCase("Maximum sessions of 1 for this principal exceeded")) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Session is Already Active, Please contact admin to reset session");
-		}else if(exception.getMessage().equalsIgnoreCase("Bad credentials")) {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "The username or password is incorrect. Please try again.");
-		}else {
+		if (exception.getMessage().equalsIgnoreCase("Maximum sessions of 1 for this principal exceeded")) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN,
+					"Session is Already Active, Please contact admin to reset session");
+		} else if (exception.getMessage().equalsIgnoreCase("Bad credentials")) {
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+					"The username or password is incorrect. Please try again.");
+		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, exception.getMessage());
 		}
-		
+
 	}
 }

@@ -15,45 +15,43 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 class DataDetailServiceImpl implements DataDetailService {
 
-    private DataDetailRepository dataDetailRepository;
+	private DataDetailRepository dataDetailRepository;
 
-    private DataDetailMapper dataDetailMapper;
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<DataDetailDTO> getAllDataDetails() {
-        return dataDetailRepository.findAll().stream()
-                .map(dataDetailMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public DataDetailDTO getDataDetailById(Integer detailId) {
-        return dataDetailRepository.findById(detailId)
-                .map(dataDetailMapper::toDTO)
-                .orElseThrow(() -> new NotFoundException("NO Data Exists for given id "+detailId)); // Or throw an exception if not found
-    }
-
-    @Override
-    @Transactional
-    public DataDetailDTO addDataDetail(DataDetailDTO dataDetailDTO) {
-            DataDetail dataDetail = dataDetailMapper.toEntity(dataDetailDTO);
-            DataDetail savedDataDetail = dataDetailRepository.save(dataDetail);
-            return dataDetailMapper.toDTO(savedDataDetail);
-    }
-    
-    @Override
-    @Transactional
-    public Integer updateDataDetailStatus(DataMaster master) {
-    	 return dataDetailRepository.updateByStatus(master, false);
-    }
+	private DataDetailMapper dataDetailMapper;
 
 	@Override
-	public Boolean isAnyActiveStatus(DataMaster master,Boolean status,String token) {
+	@Transactional(readOnly = true)
+	public List<DataDetailDTO> getAllDataDetails() {
+		return dataDetailRepository.findAll().stream().map(dataDetailMapper::toDTO).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public DataDetailDTO getDataDetailById(Integer detailId) {
+		return dataDetailRepository.findById(detailId).map(dataDetailMapper::toDTO)
+				.orElseThrow(() -> new NotFoundException("NO Data Exists for given id " + detailId)); // Or throw an
+																										// exception if
+																										// not found
+	}
+
+	@Override
+	@Transactional
+	public DataDetailDTO addDataDetail(DataDetailDTO dataDetailDTO) {
+		DataDetail dataDetail = dataDetailMapper.toEntity(dataDetailDTO);
+		DataDetail savedDataDetail = dataDetailRepository.save(dataDetail);
+		return dataDetailMapper.toDTO(savedDataDetail);
+	}
+
+	@Override
+	@Transactional
+	public Integer updateDataDetailStatus(DataMaster master) {
+		return dataDetailRepository.updateByStatus(master, false);
+	}
+
+	@Override
+	public Boolean isAnyActiveStatus(DataMaster master, Boolean status, String token) {
 		return dataDetailRepository.existsByMasterAndStatusAndSecret(master, status, token);
 	}
-    
 
 //    @Override
 //    @Transactional

@@ -25,18 +25,17 @@ class BusinessRepositoryTest {
 	@Autowired
 	private BusinessRepository underTest;
 
-
 	@Container
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
 			DockerImageName.parse("postgres:16.2"));
-	
+
 	@Test
 	void canEstalishedConnection() {
 		assertThat(postgreSQLContainer.isCreated()).isTrue();
 		assertThat(postgreSQLContainer.isRunning()).isTrue();
 	}
-	
+
 	@BeforeEach
 	void setUp() throws Exception {
 		Business business = Business.builder().name("business").username("username").password("password").build();
@@ -65,22 +64,22 @@ class BusinessRepositoryTest {
 		// then
 		assertThat(businessByUsername).isNotPresent();
 	}
-	
+
 	@Test
 	void shouldReturnTrueWhenExistsByUsername() {
-		//given
-		//when
+		// given
+		// when
 		Boolean isThereAnyBusiness = underTest.existsByUsername("username");
-		//then
+		// then
 		assertThat(isThereAnyBusiness).isTrue();
 	}
-	
+
 	@Test
 	void shouldReturnFalseWhenNotExistsByUsername() {
-		//given
-		//when
+		// given
+		// when
 		Boolean isThereAnyBusiness = underTest.existsByUsername("unknownUser");
-		//then
+		// then
 		assertThat(isThereAnyBusiness).isFalse();
 	}
 

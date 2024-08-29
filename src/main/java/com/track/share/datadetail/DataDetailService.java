@@ -6,15 +6,15 @@ import com.track.share.datamaster.DataMaster;
 
 public interface DataDetailService {
 
-    List<DataDetailDTO> getAllDataDetails();
+	List<DataDetailDTO> getAllDataDetails();
 
-    DataDetailDTO getDataDetailById(Integer detailId);
+	DataDetailDTO getDataDetailById(Integer detailId);
 
-    DataDetailDTO addDataDetail(DataDetailDTO dataDetailDTO);
-    
-    Integer updateDataDetailStatus(DataMaster master);
-    
-    Boolean isAnyActiveStatus(DataMaster master,Boolean status,String token);
+	DataDetailDTO addDataDetail(DataDetailDTO dataDetailDTO);
+
+	Integer updateDataDetailStatus(DataMaster master);
+
+	Boolean isAnyActiveStatus(DataMaster master, Boolean status, String token);
 
 //    DataDetailDTO updateDataDetail(Integer detailId, DataDetailDTO dataDetailDTO);
 //

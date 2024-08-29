@@ -30,220 +30,218 @@ import com.track.share.user.Users;
 
 public class BusinessServiceTest {
 
-    @Mock
-    private BusinessRepository businessRepository;
+	@Mock
+	private BusinessRepository businessRepository;
 
-    @Mock
-    private BusinessMapper businessMapper;
+	@Mock
+	private BusinessMapper businessMapper;
 
-    @Mock
-    private DataMasterService masterService;
+	@Mock
+	private DataMasterService masterService;
 
-    @Mock
-    private DataDetailService detailService;
+	@Mock
+	private DataDetailService detailService;
 
-    @InjectMocks
-    private BusinessServiceImpl businessService;
+	@InjectMocks
+	private BusinessServiceImpl businessService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    void shouldThrowUsernameUnavailableException_whenAddingBusinessWithExistingUsername() {
-        // Given
-        Business business = new Business();
-        when(businessRepository.existsByUsername(business.getUsername())).thenReturn(true);
+	@Test
+	void shouldThrowUsernameUnavailableException_whenAddingBusinessWithExistingUsername() {
+		// Given
+		Business business = new Business();
+		when(businessRepository.existsByUsername(business.getUsername())).thenReturn(true);
 
-        // When / Then
-        UsernameUnavailableException exception = assertThrows(UsernameUnavailableException.class, () -> {
-            businessService.addBusiness(business);
-        });
+		// When / Then
+		UsernameUnavailableException exception = assertThrows(UsernameUnavailableException.class, () -> {
+			businessService.addBusiness(business);
+		});
 
-        assertTrue(exception.getMessage().contains("Username unavailable, please try with a new username"));
-    }
+		assertTrue(exception.getMessage().contains("Username unavailable, please try with a new username"));
+	}
 
-    @Test
-    void shouldAddBusinessAndReturnDTO_whenAddingNewBusiness() {
-        // Given
-    	Integer businessId=1;
-    	String businessName="testBusiness";
-    	String businessUsername="testusername";
-    	String businessPassword="testpassword";
-    	Business business = Business.builder().businessId(businessId).name(businessName).username(businessUsername).password(businessPassword).build();
-        BusinessDTO businessDTO = new BusinessDTO(businessId,businessName,businessUsername);
-        when(businessRepository.existsByUsername(business.getUsername())).thenReturn(false);
-        when(businessMapper.toDTO(any(Business.class))).thenReturn(businessDTO);
-        when(businessRepository.save(business)).thenReturn(business);
+	@Test
+	void shouldAddBusinessAndReturnDTO_whenAddingNewBusiness() {
+		// Given
+		Integer businessId = 1;
+		String businessName = "testBusiness";
+		String businessUsername = "testusername";
+		String businessPassword = "testpassword";
+		Business business = Business.builder().businessId(businessId).name(businessName).username(businessUsername)
+				.password(businessPassword).build();
+		BusinessDTO businessDTO = new BusinessDTO(businessId, businessName, businessUsername);
+		when(businessRepository.existsByUsername(business.getUsername())).thenReturn(false);
+		when(businessMapper.toDTO(any(Business.class))).thenReturn(businessDTO);
+		when(businessRepository.save(business)).thenReturn(business);
 
-        // When
-        BusinessDTO result = businessService.addBusiness(business);
+		// When
+		BusinessDTO result = businessService.addBusiness(business);
 
-        // Then
-        assertEquals(businessDTO, result);
-        verify(businessRepository).save(business);
-    }
+		// Then
+		assertEquals(businessDTO, result);
+		verify(businessRepository).save(business);
+	}
 
-    @Test
-    void shouldReturnListOfBusinesses_whenGetBusinessesIsCalled() {
-        // Given
-        Business business = new Business();
-        BusinessDTO businessDTO = new BusinessDTO(1, "Test Business", "testUsername");
-        when(businessRepository.findAll()).thenReturn(Collections.singletonList(business));
-        when(businessMapper.toDTO(business)).thenReturn(businessDTO);
+	@Test
+	void shouldReturnListOfBusinesses_whenGetBusinessesIsCalled() {
+		// Given
+		Business business = new Business();
+		BusinessDTO businessDTO = new BusinessDTO(1, "Test Business", "testUsername");
+		when(businessRepository.findAll()).thenReturn(Collections.singletonList(business));
+		when(businessMapper.toDTO(business)).thenReturn(businessDTO);
 
-        // When
-        List<BusinessDTO> result = businessService.getBusinesses();
+		// When
+		List<BusinessDTO> result = businessService.getBusinesses();
 
-        // Then
-        assertEquals(1, result.size());
-        assertEquals(businessDTO, result.get(0));
-    }
+		// Then
+		assertEquals(1, result.size());
+		assertEquals(businessDTO, result.get(0));
+	}
 
-    @Test
-    void shouldThrowNotFoundException_whenUpdatingNonExistentBusiness() {
-        // Given
-        Business business = new Business();
-        when(businessRepository.findById(anyInt())).thenReturn(Optional.empty());
+	@Test
+	void shouldThrowNotFoundException_whenUpdatingNonExistentBusiness() {
+		// Given
+		Business business = new Business();
+		when(businessRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        // When / Then
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            businessService.updateBusiness(1, business);
-        });
+		// When / Then
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+			businessService.updateBusiness(1, business);
+		});
 
-        assertTrue(exception.getMessage().contains("Business not found with id 1"));
-    }
+		assertTrue(exception.getMessage().contains("Business not found with id 1"));
+	}
 
-    @Test
-    void shouldUpdateBusinessAndReturnDTO_whenBusinessExists() {
-        // Given
-        Business existingBusiness = new Business();
-        BusinessDTO updatedBusinessDTO = new BusinessDTO(1, "Updated Business", "updatedUsername");
-        Business updatedBusiness = new Business();
-        when(businessRepository.findById(anyInt())).thenReturn(Optional.of(existingBusiness));
-        when(businessRepository.save(existingBusiness)).thenReturn(updatedBusiness);
-        when(businessMapper.toDTO(updatedBusiness)).thenReturn(updatedBusinessDTO);
+	@Test
+	void shouldUpdateBusinessAndReturnDTO_whenBusinessExists() {
+		// Given
+		Business existingBusiness = new Business();
+		BusinessDTO updatedBusinessDTO = new BusinessDTO(1, "Updated Business", "updatedUsername");
+		Business updatedBusiness = new Business();
+		when(businessRepository.findById(anyInt())).thenReturn(Optional.of(existingBusiness));
+		when(businessRepository.save(existingBusiness)).thenReturn(updatedBusiness);
+		when(businessMapper.toDTO(updatedBusiness)).thenReturn(updatedBusinessDTO);
 
-        // When
-        BusinessDTO result = businessService.updateBusiness(1, existingBusiness);
+		// When
+		BusinessDTO result = businessService.updateBusiness(1, existingBusiness);
 
-        // Then
-        assertEquals(updatedBusinessDTO, result);
-    }
+		// Then
+		assertEquals(updatedBusinessDTO, result);
+	}
 
-    @Test
-    void shouldDeleteBusinessAndReturnTrue_whenBusinessExists() {
-        // Given
-        when(businessRepository.existsById(anyInt())).thenReturn(true);
+	@Test
+	void shouldDeleteBusinessAndReturnTrue_whenBusinessExists() {
+		// Given
+		when(businessRepository.existsById(anyInt())).thenReturn(true);
 
-        // When
-        Boolean result = businessService.deleteBusiness(1);
+		// When
+		Boolean result = businessService.deleteBusiness(1);
 
-        // Then
-        assertTrue(result);
-        verify(businessRepository).deleteById(1);
-    }
+		// Then
+		assertTrue(result);
+		verify(businessRepository).deleteById(1);
+	}
 
-    @Test
-    void shouldThrowNotFoundException_whenDeletingNonExistentBusiness() {
-        // Given
-        when(businessRepository.existsById(anyInt())).thenReturn(false);
+	@Test
+	void shouldThrowNotFoundException_whenDeletingNonExistentBusiness() {
+		// Given
+		when(businessRepository.existsById(anyInt())).thenReturn(false);
 
-        // When / Then
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            businessService.deleteBusiness(1);
-        });
+		// When / Then
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+			businessService.deleteBusiness(1);
+		});
 
-        assertTrue(exception.getMessage().contains("Business not found with id 1"));
-    }
+		assertTrue(exception.getMessage().contains("Business not found with id 1"));
+	}
 
-    @Test
-    void shouldReturnBusiness_whenGettingBusinessById() {
-        // Given
-        Business business = new Business();
-        when(businessRepository.findById(anyInt())).thenReturn(Optional.of(business));
+	@Test
+	void shouldReturnBusiness_whenGettingBusinessById() {
+		// Given
+		Business business = new Business();
+		when(businessRepository.findById(anyInt())).thenReturn(Optional.of(business));
 
-        // When
-        Business result = businessService.getBusiness(1);
+		// When
+		Business result = businessService.getBusiness(1);
 
-        // Then
-        assertEquals(business, result);
-    }
+		// Then
+		assertEquals(business, result);
+	}
 
-    @Test
-    void shouldThrowNotFoundException_whenBusinessNotFoundById() {
-        // Given
-        when(businessRepository.findById(anyInt())).thenReturn(Optional.empty());
+	@Test
+	void shouldThrowNotFoundException_whenBusinessNotFoundById() {
+		// Given
+		when(businessRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        // When / Then
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            businessService.getBusiness(1);
-        });
+		// When / Then
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+			businessService.getBusiness(1);
+		});
 
-        assertTrue(exception.getMessage().contains("Business not found with id 1"));
-    }
+		assertTrue(exception.getMessage().contains("Business not found with id 1"));
+	}
 
-    @Test
-    void shouldReturnBusiness_whenGettingBusinessByUsername() {
-        // Given
-        Business business = new Business();
-        when(businessRepository.findByUsername(anyString())).thenReturn(Optional.of(business));
+	@Test
+	void shouldReturnBusiness_whenGettingBusinessByUsername() {
+		// Given
+		Business business = new Business();
+		when(businessRepository.findByUsername(anyString())).thenReturn(Optional.of(business));
 
-        // When
-        Business result = businessService.getBusinessByUsername("testUsername");
+		// When
+		Business result = businessService.getBusinessByUsername("testUsername");
 
-        // Then
-        assertEquals(business, result);
-    }
+		// Then
+		assertEquals(business, result);
+	}
 
-    @Test
-    void shouldThrowNotFoundException_whenBusinessNotFoundByUsername() {
-        // Given
-        when(businessRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+	@Test
+	void shouldThrowNotFoundException_whenBusinessNotFoundByUsername() {
+		// Given
+		when(businessRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
-        // When / Then
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            businessService.getBusinessByUsername("testUsername");
-        });
+		// When / Then
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+			businessService.getBusinessByUsername("testUsername");
+		});
 
-        assertTrue(exception.getMessage().contains("Invalid Username Or Password"));
-    }
+		assertTrue(exception.getMessage().contains("Invalid Username Or Password"));
+	}
 
-    @Test
-    void shouldReturnAuthUserDetails_whenLoadingUserByUsername() {
-        // Given
-        Business business = new Business();
-        business.setUsername("testUsername");
-        business.setPassword("encodedPassword");
-        DataMaster dataMaster = new DataMaster();
-        when(businessRepository.findByUsername(anyString())).thenReturn(Optional.of(business));
-        when(masterService.getMasterByBusiness(any(Business.class))).thenReturn(dataMaster);
-        when(detailService.isAnyActiveStatus(any(DataMaster.class), anyBoolean(), anyString())).thenReturn(true);
+	@Test
+	void shouldReturnAuthUserDetails_whenLoadingUserByUsername() {
+		// Given
+		Business business = new Business();
+		business.setUsername("testUsername");
+		business.setPassword("encodedPassword");
+		DataMaster dataMaster = new DataMaster();
+		when(businessRepository.findByUsername(anyString())).thenReturn(Optional.of(business));
+		when(masterService.getMasterByBusiness(any(Business.class))).thenReturn(dataMaster);
+		when(detailService.isAnyActiveStatus(any(DataMaster.class), anyBoolean(), anyString())).thenReturn(true);
 
-        AuthUserDetails expectedDetails = new AuthUserDetails(Users.builder()
-            .email(business.getUsername())
-            .status(true)
-            .password(business.getPassword())
-            .build());
+		AuthUserDetails expectedDetails = new AuthUserDetails(
+				Users.builder().email(business.getUsername()).status(true).password(business.getPassword()).build());
 
-        // When
-        AuthUserDetails result = businessService.loadUserByUsername("testUsername", "token");
+		// When
+		AuthUserDetails result = businessService.loadUserByUsername("testUsername", "token");
 
-        // Then
-        assertEquals(expectedDetails, result);
-    }
+		// Then
+		assertEquals(expectedDetails, result);
+	}
 
-    @Test
-    void shouldThrowUsernameNotFoundException_whenLoadingUserByUsernameFails() {
-        // Given
-        when(businessRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+	@Test
+	void shouldThrowUsernameNotFoundException_whenLoadingUserByUsernameFails() {
+		// Given
+		when(businessRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
-        // When / Then
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            businessService.loadUserByUsername("testUsername", "token");
-        });
+		// When / Then
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+			businessService.loadUserByUsername("testUsername", "token");
+		});
 
-        assertTrue(exception.getMessage().contains("Invalid Username Or Password"));
-    }
+		assertTrue(exception.getMessage().contains("Invalid Username Or Password"));
+	}
 }

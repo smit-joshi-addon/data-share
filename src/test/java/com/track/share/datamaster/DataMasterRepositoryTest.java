@@ -30,34 +30,27 @@ class DataMasterRepositoryTest {
 	@ServiceConnection
 	static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
 			DockerImageName.parse("postgres:16.2"));
-	
+
 	@Autowired
 	private DataMasterRepository underTest;
-	
+
 	@Autowired
 	private BusinessRepository businessRepository;
-	
+
 	private Business business;
-	
+
 	@BeforeAll
-	static void  canEstalishedConnection() {
+	static void canEstalishedConnection() {
 		assertThat(postgreSQLContainer.isCreated()).isTrue();
 		assertThat(postgreSQLContainer.isRunning()).isTrue();
 	}
 
-
 	@BeforeEach
 	void setUp() throws Exception {
-		business = Business.builder().
-				name("business-x").
-				username("mybusiness").
-				password("password").build();
-		business=businessRepository.save(business);
-		
-		DataMaster master = DataMaster.builder()
-				.type(RequestType.PULL)
-				.business(business)
-				.build();
+		business = Business.builder().name("business-x").username("mybusiness").password("password").build();
+		business = businessRepository.save(business);
+
+		DataMaster master = DataMaster.builder().type(RequestType.PULL).business(business).build();
 		underTest.save(master);
 	}
 
@@ -69,24 +62,21 @@ class DataMasterRepositoryTest {
 
 	@Test
 	void shouldReturnMasterByBusinessIfPresent() {
-		//given
-		//when
+		// given
+		// when
 		Optional<DataMaster> masterByBusiness = underTest.findByBusiness(business);
-		//then
+		// then
 		assertThat(masterByBusiness).isPresent();
 	}
-	
+
 	@Test
 	void shoudNotMasterByBusinessIfNotPresent() {
-		//given
-		business = Business.builder().
-				name("business-x").
-				username("mybusiness2").
-				password("password").build();
-		business=businessRepository.save(business);
-		//when
+		// given
+		business = Business.builder().name("business-x").username("mybusiness2").password("password").build();
+		business = businessRepository.save(business);
+		// when
 		Optional<DataMaster> masterByBusiness = underTest.findByBusiness(business);
-		//then
+		// then
 		assertThat(masterByBusiness).isNotPresent();
 	}
 }
