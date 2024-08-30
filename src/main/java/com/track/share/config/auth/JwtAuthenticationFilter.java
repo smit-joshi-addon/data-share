@@ -3,10 +3,10 @@ package com.track.share.config.auth;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -31,12 +31,8 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	private BusinessService businessService;
 
-	private UserDetailsService userDetailsService;
-
 	@Autowired
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+    private ApplicationContext context;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -70,7 +66,8 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 					UserDetails userDetails;
 
 					try {
-						userDetails = this.userDetailsService.loadUserByUsername(username);
+						userDetails = context.getBean(UserDetailsServiceImpl.class)
+	                            .loadUserByUsername(username);
 					} catch (UsernameNotFoundException e) {
 						userDetails = this.businessService.loadUserByUsername(username, token);
 					}

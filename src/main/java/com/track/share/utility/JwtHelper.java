@@ -19,8 +19,8 @@ import io.jsonwebtoken.security.Keys;
 public class JwtHelper {
 
 	// requirement :
-//	public static final long JWT_TOKEN_VALIDITY = 60L * 60L * 24L * 365L * 10L; //10 years
-	public static final long JWT_TOKEN_VALIDITY = 60L * 30; // 10 minutes
+	public static final long JWT_TOKEN_VALIDITY = 60L * 60L * 24L * 365L * 10L; //10 years
+	// public static final long JWT_TOKEN_VALIDITY = 60L * 30; // 10 minutes
 
 	private String secret = "UBfqXorgJNzArZFdNLNSjABTBQqrTCJGmENCzYqvgVBnBDgdPOTkuMQpaLZYGQOcZftsSAlbJMKaoCCvnZmfeiUjQBPubpcfUUaGdjIRSPdWQrIpWjhqGvbNDTHENcXE";
 
