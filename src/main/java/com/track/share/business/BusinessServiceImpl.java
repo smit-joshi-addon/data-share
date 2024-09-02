@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,13 @@ import org.springframework.stereotype.Service;
 import com.track.share.config.auth.AuthUserDetails;
 import com.track.share.datadetail.DataDetailService;
 import com.track.share.datamaster.DataMaster;
-import com.track.share.datamaster.DataMasterService;
+import com.track.share.datamaster.DataMasterServiceImpl;
 import com.track.share.exceptions.NotFoundException;
 import com.track.share.exceptions.UsernameUnavailableException;
 import com.track.share.user.Users;
 
 @Service
-class BusinessServiceImpl implements BusinessService {
+public class BusinessServiceImpl implements BusinessService {
 
 	@Autowired
 	private BusinessRepository businessRepository;
@@ -27,7 +28,8 @@ class BusinessServiceImpl implements BusinessService {
 	private BusinessMapper businessMapper;
 
 	@Autowired
-	private DataMasterService masterService;
+    private ApplicationContext context;
+
 
 	@Autowired
 	private DataDetailService detailService;
@@ -83,7 +85,7 @@ class BusinessServiceImpl implements BusinessService {
 		if (business.isEmpty()) {
 			throw new NotFoundException("Invalid Username Or Password");
 		}
-		DataMaster master = masterService.getMasterByBusiness(business.get());
+		DataMaster master = context.getBean(DataMasterServiceImpl.class).getMasterByBusiness(business.get());
 		Boolean status = detailService.isAnyActiveStatus(master, Boolean.TRUE, token);
 		return new AuthUserDetails(Users.builder().email(business.get().getUsername()).status(status)
 				.password(business.get().getPassword()).build());

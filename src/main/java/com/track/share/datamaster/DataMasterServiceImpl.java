@@ -22,7 +22,7 @@ import com.track.share.utility.Utility;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-class DataMasterServiceImpl implements DataMasterService {
+public class DataMasterServiceImpl implements DataMasterService {
 
 	@Autowired
 	private DataMasterRepository dataMasterRepository;

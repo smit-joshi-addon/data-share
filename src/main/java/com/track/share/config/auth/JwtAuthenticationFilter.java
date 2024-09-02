@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.track.share.business.BusinessService;
+import com.track.share.business.BusinessServiceImpl;
 import com.track.share.utility.JwtHelper;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -27,9 +27,6 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JwtHelper jwtHelper;
-
-	@Autowired
-	private BusinessService businessService;
 
 	@Autowired
     private ApplicationContext context;
@@ -69,7 +66,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 						userDetails = context.getBean(UserDetailsServiceImpl.class)
 	                            .loadUserByUsername(username);
 					} catch (UsernameNotFoundException e) {
-						userDetails = this.businessService.loadUserByUsername(username, token);
+						userDetails = context.getBean(BusinessServiceImpl.class).loadUserByUsername(username, token);
 					}
 
 					// Validate the token
