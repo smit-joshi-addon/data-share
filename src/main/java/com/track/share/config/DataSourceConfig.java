@@ -16,10 +16,18 @@ class DataSourceConfig {
 
 	@Value("${spring.datasource.url:}")
 	private final String url = env("SPRING_DATASOURCE_URL");
+	
 	@Value("${spring.datasource.username:}")
 	private final String username = env("SPRING_DATASOURCE_USERNAME");
+	
 	@Value("${spring.datasource.password:}")
 	private final String password = env("SPRING_DATASOURCE_PASSWORD");
+	
+	@Value("${spring.jpa.hibernate.ddl-auto:}")
+	private final String ddlMode = env("SPRING_JPA_HIBERNATE_DDL_AUTO");
+	
+	@Value("${spring.sql.init.mode:}")
+	private final String initMode = env("SPRING_SQL_INIT_MODE");
 
 	private static String env(String name) {
 		return System.getenv(name);
