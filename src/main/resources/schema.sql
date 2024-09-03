@@ -10,6 +10,6 @@ ALTER TABLE analytics
 -- Ensure there is a unique index that includes the time column (called_at)
 CREATE UNIQUE INDEX idx_analytics_unique ON analytics (uuid, called_at);
 
-SELECT create_hypertable('analytics', 'called_at',chunk_time_interval => interval '6 hours');
+SELECT create_hypertable('analytics', 'called_at',chunk_time_interval => interval '1 hours');
 
 SELECT add_retention_policy('analytics', INTERVAL '24 hours', schedule_interval => INTERVAL '24 hours');
