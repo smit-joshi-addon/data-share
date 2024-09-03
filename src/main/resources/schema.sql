@@ -12,4 +12,4 @@ CREATE UNIQUE INDEX idx_analytics_unique ON analytics (uuid, called_at);
 
 SELECT create_hypertable('analytics', 'called_at',chunk_time_interval => interval '6 hours');
 
-SELECT add_retention_policy('analytics', INTERVAL '24 hours');
+SELECT add_retention_policy('analytics', INTERVAL '24 hours', schedule_interval => INTERVAL '24 hours');

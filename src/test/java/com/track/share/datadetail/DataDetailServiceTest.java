@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.track.share.datamaster.DataMaster;
+import com.track.share.datamaster.RequestType;
 import com.track.share.exceptions.NotFoundException;
 
 public class DataDetailServiceTest {
@@ -40,7 +41,7 @@ public class DataDetailServiceTest {
 		// Given
 		DataDetail dataDetail = new DataDetail();
 		DataDetailDTO dataDetailDTO = new DataDetailDTO(1, 1, "secret", LocalDateTime.now(), LocalDateTime.now(), "id",
-				"name", "ip", true);
+				"name", "ip", true, RequestType.PULL);
 		when(dataDetailRepository.findAll()).thenReturn(Collections.singletonList(dataDetail));
 		when(dataDetailMapper.toDTO(dataDetail)).thenReturn(dataDetailDTO);
 
@@ -57,7 +58,7 @@ public class DataDetailServiceTest {
 		// Given
 		DataDetail dataDetail = new DataDetail();
 		DataDetailDTO dataDetailDTO = new DataDetailDTO(1, 1, "secret", LocalDateTime.now(), LocalDateTime.now(), "id",
-				"name", "ip", true);
+				"name", "ip", true, RequestType.PULL);
 		when(dataDetailRepository.findById(1)).thenReturn(Optional.of(dataDetail));
 		when(dataDetailMapper.toDTO(dataDetail)).thenReturn(dataDetailDTO);
 
@@ -84,7 +85,7 @@ public class DataDetailServiceTest {
 	void shouldSaveAndReturnDataDetail_whenAddDataDetailIsCalled() {
 		// Given
 		DataDetailDTO dataDetailDTO = new DataDetailDTO(1, 1, "secret", LocalDateTime.now(), LocalDateTime.now(), "id",
-				"name", "ip", true);
+				"name", "ip", true, RequestType.PULL);
 		DataDetail dataDetail = new DataDetail();
 		when(dataDetailMapper.toEntity(dataDetailDTO)).thenReturn(dataDetail);
 		when(dataDetailRepository.save(dataDetail)).thenReturn(dataDetail);

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.track.share.datamaster.DataMaster;
+import com.track.share.datamaster.RequestType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +40,7 @@ public class DataDetail {
 	private String createdById;
 	private String createdByName;
 	private String createdByIp;
-
+	private RequestType type;
 	private Boolean status;
 
 }

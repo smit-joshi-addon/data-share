@@ -15,7 +15,8 @@ class DataDetailMapper {
 		return new DataDetailDTO(dataDetail.getDetailId(),
 				dataDetail.getMaster() != null ? dataDetail.getMaster().getSharingId() : null, dataDetail.getSecret(),
 				dataDetail.getValidTill(), dataDetail.getCreatedAt(), dataDetail.getCreatedById(),
-				dataDetail.getCreatedByName(), dataDetail.getCreatedByIp(), dataDetail.getStatus());
+				dataDetail.getCreatedByName(), dataDetail.getCreatedByIp(), dataDetail.getStatus(),
+				dataDetail.getType());
 	}
 
 	public DataDetail toEntity(DataDetailDTO dataDetailDTO) {
@@ -32,6 +33,7 @@ class DataDetailMapper {
 		dataDetail.setCreatedByName(dataDetailDTO.createdByName());
 		dataDetail.setCreatedByIp(dataDetailDTO.createdByIp());
 		dataDetail.setStatus(dataDetailDTO.status());
+		dataDetail.setType(dataDetailDTO.type());
 
 		return dataDetail;
 	}

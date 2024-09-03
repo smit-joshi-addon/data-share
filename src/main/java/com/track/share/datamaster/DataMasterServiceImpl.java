@@ -71,7 +71,7 @@ public class DataMasterServiceImpl implements DataMasterService {
 		Date dateTieme = jwtHelper.getExpirationDateFromToken(master.getSecret());
 		DataDetailDTO detailDTO = new DataDetailDTO(null, master.getSharingId(), master.getSecret(),
 				utility.convertToLocalDateTime(dateTieme), null, master.getCeatedById(),
-				user != null ? user.getName() : "", master.getCreatedByIp(), master.getStatus());
+				user != null ? user.getName() : "", master.getCreatedByIp(), master.getStatus(),master.getType());
 		detailService.addDataDetail(detailDTO);
 	}
 
@@ -88,6 +88,7 @@ public class DataMasterServiceImpl implements DataMasterService {
 			dataMaster.setCeatedById(user != null ? user.getUserId().toString() : "");
 			dataMaster.setCreatedByIp(request.getRemoteAddr());
 			dataMaster.setStatus(masterDTO.status());
+			dataMaster.setType(masterDTO.type());
 			// Update other fields if needed
 			DataMaster updatedDataMaster = dataMasterRepository.save(dataMaster);
 

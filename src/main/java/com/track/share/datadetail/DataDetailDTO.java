@@ -2,6 +2,8 @@ package com.track.share.datadetail;
 
 import java.time.LocalDateTime;
 
+import com.track.share.datamaster.RequestType;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 
@@ -17,5 +19,5 @@ public record DataDetailDTO(@Schema(requiredMode = RequiredMode.NOT_REQUIRED) In
 																													// master
 																													// data
 		String secret, LocalDateTime validTill, LocalDateTime createdAt, String createdById, String createdByName,
-		String createdByIp, Boolean status) {
+		String createdByIp, Boolean status, RequestType type) {
 }
