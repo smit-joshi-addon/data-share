@@ -29,7 +29,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private JwtHelper jwtHelper;
 
 	@Autowired
-    private ApplicationContext context;
+	private ApplicationContext context;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -47,7 +47,6 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 				if (requestHeader.startsWith("Bearer ")) {
 					// Extracting the token
 					token = requestHeader.substring(7);
-					logger.info("Received token: {} " + token);
 
 					// Validating the token and extracting username
 					username = this.jwtHelper.getUsernameFromToken(token);
@@ -64,7 +63,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 					try {
 						userDetails = context.getBean(UserDetailsServiceImpl.class)
-	                            .loadUserByUsername(username);
+								.loadUserByUsername(username);
 					} catch (UsernameNotFoundException e) {
 						userDetails = context.getBean(BusinessServiceImpl.class).loadUserByUsername(username, token);
 					}
@@ -74,7 +73,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 							? this.jwtHelper.validateToken(token, userDetails.getUsername())
 							: false;
 
-//					logger.info("Validation Result: " + validateToken);
+					// logger.info("Validation Result: " + validateToken);
 
 					if (validateToken) {
 						// Set up authentication
