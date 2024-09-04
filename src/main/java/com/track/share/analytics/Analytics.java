@@ -1,6 +1,6 @@
 package com.track.share.analytics;
 
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -35,7 +35,8 @@ public class Analytics {
 
 	@CreationTimestamp
 	@Column(columnDefinition = "TIMESTAMPTZ", unique = true, nullable = false)
-	private OffsetDateTime calledAt;
+	private ZonedDateTime calledAt;
+	
 	@Size(max = 255)
 	private String calledByIp;
 

@@ -1,7 +1,7 @@
 package com.track.share.analytics;
 
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 
-public record AnalyticsDTO(String uuid, String businessId, String methodName, OffsetDateTime calledAt,
+public record AnalyticsDTO(String uuid, String businessId, String methodName, ZonedDateTime calledAt,
 		String calledByIp) {
 }

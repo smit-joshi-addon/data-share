@@ -7,7 +7,7 @@ public interface AnalyticsService {
 
 	AnalyticsDTO getAnalyticsById(String uuid);
 
-	List<AnalyticsDTO> getAllAnalytics();
+	List<AnalyticsData> getAllAnalytics();
 
 	void deleteAnalytics(String uuid);
 }

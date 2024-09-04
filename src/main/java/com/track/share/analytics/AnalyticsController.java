@@ -24,9 +24,9 @@ class AnalyticsController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<AnalyticsDTO>> getAllAnalytics() {
-		List<AnalyticsDTO> analyticsList = analyticsService.getAllAnalytics();
-		return new ResponseEntity<>(analyticsList, HttpStatus.OK);
+	public ResponseEntity<List<AnalyticsData>> getAllAnalytics() {
+		List<AnalyticsData> analyticsData = analyticsService.getAllAnalytics();
+		return new ResponseEntity<>(analyticsData, HttpStatus.OK);
 	}
 
 }

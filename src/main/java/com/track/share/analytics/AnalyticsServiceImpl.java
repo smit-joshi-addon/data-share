@@ -1,7 +1,6 @@
 package com.track.share.analytics;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,8 +41,8 @@ class AnalyticsServiceImpl implements AnalyticsService {
 	}
 
 	@Override
-	public List<AnalyticsDTO> getAllAnalytics() {
-		return analyticsRepository.findAll().stream().map(analyticsMapper::toDto).collect(Collectors.toList());
+	public List<AnalyticsData> getAllAnalytics() {
+		return analyticsRepository.findAnalyticsData();
 	}
 
 	@Override

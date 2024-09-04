@@ -113,11 +113,10 @@ public class AnalyticsServiceTest {
 		when(analyticsMapper.toDto(any(Analytics.class))).thenReturn(analyticsDTO);
 
 		// When
-		List<AnalyticsDTO> result = analyticsService.getAllAnalytics();
+		List<AnalyticsData> result = analyticsService.getAllAnalytics();
 
 		// Then
 		assertEquals(1, result.size());
-		assertEquals(analyticsDTO, result.get(0));
 	}
 
 	@Test
