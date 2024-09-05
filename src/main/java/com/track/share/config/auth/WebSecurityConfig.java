@@ -80,7 +80,7 @@ class WebSecurityConfig {
 			config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 			config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 			return config;
-		})).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll()
+		})).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**","/api/proxy/**").permitAll()
 				.requestMatchers("/api/v1/manage").hasAnyRole("ADMIN").anyRequest().authenticated())
 				.exceptionHandling(ex -> ex.authenticationEntryPoint(point))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
