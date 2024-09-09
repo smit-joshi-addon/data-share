@@ -1,88 +1,77 @@
 package com.track.share.analytics;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class AnalyticsScheduler {
 
-	@Autowired
-	private RestTemplate restTemplate;
+    @Autowired
+    private AnalyticsService analyticsService;
 
-	private final String baseUrl = "http://localhost:8080"; // Externalize this to a configuration file
-	private final String sseEndpointUrl = baseUrl + "/api/analytics";
+    private final Set<SseEmitter> emitters = Collections.synchronizedSet(new HashSet<>());
+    private final AtomicBoolean running = new AtomicBoolean(false);
 
-	private final AtomicReference<SseEmitter> currentEmitter = new AtomicReference<>();
-	private final AtomicReference<String> currentToken = new AtomicReference<>();
-	private final AtomicBoolean running = new AtomicBoolean(false);
+    public void addEmitter(SseEmitter emitter) {
+        emitters.add(emitter);
+        emitter.onCompletion(() -> emitters.remove(emitter));
+        emitter.onTimeout(() -> emitters.remove(emitter));
+        emitter.onError((e) -> emitters.remove(emitter));
 
-	public void startScheduledTask(SseEmitter emitter, String token) {
-		if (running.getAndSet(true)) {
-			throw new IllegalStateException("Scheduler is already running");
-		}
-		currentEmitter.set(emitter);
-		currentToken.set(token);
-	}
+        // Start the scheduled task if not running
+        if (running.compareAndSet(false, true)) {
+            startScheduledTask();
+        }
+    }
 
-	@Scheduled(fixedRate = 1000) // Execute every second
-	public void fetchData() {
-		if (!running.get()) {
-			return;
-		}
+    @Scheduled(fixedRate = 1000) // Execute every second
+    public void fetchData() {
+        if (!running.get()) {
+            return;
+        }
 
-		SseEmitter emitterToUse = currentEmitter.get();
-		String tokenToUse = currentToken.get();
+        ResponseEntity<List<AnalyticsData>> response = ResponseEntity.ok(analyticsService.getAllAnalytics());
+        synchronized (emitters) {
+            for (SseEmitter emitter : emitters) {
+                try {
+                    emitter.send(SseEmitter.event().data(response.getBody()));
+                } catch (IOException e) {
+                    handleException(emitter, e);
+                }
+            }
+        }
+    }
 
-		if (emitterToUse == null || tokenToUse == null) {
-			return;
-		}
+    private void handleException(SseEmitter emitter, Exception e) {
+        try {
+            emitter.completeWithError(e);
+        } finally {
+            emitters.remove(emitter);
+        }
+    }
 
-		ResponseEntity<List<?>> response;
-		try {
-			response = restTemplate.exchange(sseEndpointUrl, HttpMethod.GET,
-					new HttpEntity<>(createHeaders(tokenToUse)), new ParameterizedTypeReference<>() {
-					});
-		} catch (Exception e) {
-			handleException(emitterToUse, e);
-			return;
-		}
+    private void startScheduledTask() {
+        // Ensure the scheduler is running
+        if (running.compareAndSet(false, true)) {
+            fetchData(); // Trigger an immediate fetch
+        }
+    }
 
-		try {
-			emitterToUse.send(SseEmitter.event().data(response.getBody()));
-		} catch (IOException e) {
-			handleException(emitterToUse, e);
-		}
-	}
+    public void stopScheduledTask() {
+        running.set(false);
+    }
 
-	private void handleException(SseEmitter emitter, Exception e) {
-		if (emitter != null) {
-			try {
-				emitter.completeWithError(e);
-			} finally {
-				// Clean up
-				running.set(false);
-				currentEmitter.set(null);
-				currentToken.set(null);
-			}
-		}
-	}
-
-	private HttpHeaders createHeaders(String token) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-		return headers;
-	}
+    public boolean isRunning() {
+        return running.get();
+    }
 }

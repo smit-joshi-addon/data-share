@@ -29,4 +29,12 @@ public class GlobalExceptionHandler {
 		return new ApiErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI(),
 				method.getMethod().getName(), ZonedDateTime.now());
 	}
+
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ExceptionHandler(value = UnauthorizedException.class)
+	public ApiErrorResponse unauhorizedUser(UnauthorizedException ex, HttpServletRequest request,
+			HandlerMethod method) {
+		return new ApiErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI(),
+				method.getMethod().getName(), ZonedDateTime.now());
+	}
 }
